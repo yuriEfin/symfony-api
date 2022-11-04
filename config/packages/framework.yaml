@@ -17,6 +17,16 @@ framework:
     php_errors:
         log: true
 
+    serializer:
+        circular_reference_handler: 'App\Serializer\CircularReferenceHandler'
+        enabled: true
+        enable_annotations: true
+
+# обратный прокси кеш если прод
+when@prod:
+    framework:
+        http_cache: true
+
 when@test:
     framework:
         test: true
