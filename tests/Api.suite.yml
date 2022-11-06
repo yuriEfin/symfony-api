@@ -1,0 +1,9 @@
+actor: ApiTester
+suite_namespace: App\Tests\Api
+modules:
+  enabled:
+    - REST:
+        depends: PhpBrowser
+        url: http://172.28.0.1:8081/api/
+        part: Json
+        shortDebugResponse: 300

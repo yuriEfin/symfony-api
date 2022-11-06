@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Context\Category\Dto\CategoryDto;
 use App\Context\Category\Interfaces\CategoryManagerInterface;
+use App\Entity\Categories;
 use App\Entity\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -40,88 +41,49 @@ class CategoryFillCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         
-        foreach ($this->getList() as $parentTitle => $childs) {
-            $childCategories = array_map(fn(string $title) => (new Category())->setTitle($title), $childs);
-            $categoryDto = new CategoryDto($parentTitle, new ArrayCollection($childCategories));
-            $this->categoryManager->create($categoryDto);
+        $categories = $this->getList();
+        $bufferCategories = [];
+        foreach ($categories as $category) {
+            $childCategories = $this->getChild($category);
+            
+            $categoryDto = new CategoryDto($category['name'], new ArrayCollection($childCategories));
+            $categoryDto
+                ->setId($category['id'])
+                ->setStatusId($category['status']);
+            
+            $bufferCategories[] = $categoryDto;
         }
+        $this->categoryManager->createBatch(new ArrayCollection($bufferCategories));
+        
         $io->success('Finished!');
         
         return Command::SUCCESS;
     }
     
+    private function getChild($category): array
+    {
+        $children = [];
+        foreach ($category['published_children'] ?? [] as $categoryChildItem) {
+            $categoryDto = new CategoryDto($categoryChildItem['name'], new ArrayCollection($this->getChild($categoryChildItem)));
+            
+            $categoryDto
+                ->setParentTitle($category['name'])
+                ->setId($categoryChildItem['id'])
+                ->setStatusId($categoryChildItem['status']);
+            
+            $children[$category['id']][] = $categoryDto;
+        }
+        
+        return $children;
+    }
+    
     private function getList(): array
     {
-        return [
-            'Транспорт'                     => [
-                'Автомобили',
-                'Мотоциклы и мототехника',
-                'Грузовики и спецтехника',
-                'Водный транспорт',
-                'Запчасти и аксессуары',
-            ],
-            'Для дома и дачи'               => [
-                'Ремонт и строительство',
-                'Мебель и интерьер',
-                'Бытовая техника',
-                'Продукты питания',
-                'Растения',
-                'Посуда и товары для кухни',
-            ],
-            'Готовый бизнес и оборудование' => [
-                'Готовый бизнес',
-                'Оборудование для бизнеса',
-            ],
-            'Недвижимость'                  => [
-                'Квартиры',
-                'Комнаты',
-                'Дома, дачи, коттеджи',
-                'Земельные участки',
-                'Гаражи и машиноместа',
-                'Коммерческая недвижимость',
-                'Недвижимость за рубежом',
-                'Ипотечный калькулятор',
-            ],
-            'Электроника'                   => [
-                'Телефоны',
-                'Аудио и видео',
-                'Товары для компьютера',
-                'Игры, приставки и программы',
-                'Ноутбуки',
-                'Настольные компьютеры',
-                'Фототехника',
-                'Планшеты и электронные книги',
-                'Оргтехника и расходники',
-            ],
-            'Работа'                        => [
-                'Вакансии',
-                'Резюме',
-            ],
-            'Услуги'                        => [],
-            'Хобби и отдых'                 => [
-                'Билеты и путешествия',
-                'Велосипеды',
-                'Книги и журналы',
-                'Коллекционирование',
-                'Музыкальные инструменты',
-                'Охота и рыбалка',
-                'Спорт и отдых',
-            ],
-            'Личные вещи'                   => [
-                'Одежда, обувь, аксессуары',
-                'Детская одежда и обувь',
-                'Товары для детей и игрушки',
-                'Красота и здоровье',
-                'Часы и украшения',
-            ],
-            'Животные'                      => [
-                'Собаки',
-                'Кошки',
-                'Птицы',
-                'Аквариум',
-                'Другие животные',
-                'Товары для животных',
-            ],
-        ];
+        $categories = file_get_contents('/var/www/symfony/var/parsers/menu/menu.json');
+        if (false === $categories) {
+            return [];
+        }
+        
+        return json_decode($categories, true);
     }
 }

@@ -3,7 +3,6 @@
 namespace App\Context\Category\Dto\Search;
 
 use App\Context\Search\Request\AbstractSearchDto;
-use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class SearchDto extends AbstractSearchDto

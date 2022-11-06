@@ -2,7 +2,7 @@
 
 namespace App\Context\Search\Response;
 
-class AbstractResponseDto
+abstract class AbstractResponseDto
 {
     
 }

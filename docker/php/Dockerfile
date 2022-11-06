@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
     libicu-dev  \
     libonig-dev \
     libxslt1-dev \
+    iputils-ping \
+    telnet \
     acl \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
@@ -36,4 +38,5 @@ RUN pecl install xdebug \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+RUN echo 'alias codecept="/var/www/symfony/vendor/bin/codecept"' >> ~/.bashrc
 WORKDIR /var/www/symfony

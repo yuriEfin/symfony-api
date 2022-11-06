@@ -2,7 +2,12 @@
 
 namespace App\Context\Parsing\Avito\Product;
 
-class Parser
+use App\Context\Parsing\AbstractParsingService;
+use App\Context\Parsing\Interfaces\ParserInterface;
+
+class Parser extends AbstractParsingService implements ParserInterface
 {
-    
+    public function parse(): void
+    {
+    }
 }

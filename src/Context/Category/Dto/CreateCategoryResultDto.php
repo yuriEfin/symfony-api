@@ -5,11 +5,13 @@ namespace App\Context\Category\Dto;
 class CreateCategoryResultDto
 {
     public ?int $id;
+    public ?string $title;
     protected bool $isSuccess = false;
     
-    public function __construct(?int $id)
+    public function __construct(?int $id, ?string $title)
     {
         $this->id = $id;
+        $this->title = $title;
     }
     
     /**
@@ -21,11 +23,19 @@ class CreateCategoryResultDto
     }
     
     /**
+     * @return string|null
+     */
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+    
+    /**
      * @return bool
      */
     public function isSuccess(): bool
     {
-        return $this->isSuccess;
+        return $this->id !== null;
     }
     
     /**

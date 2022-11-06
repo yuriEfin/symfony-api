@@ -9,22 +9,35 @@ use App\Context\Category\Dto\Search\SearchDto;
 use App\Context\Category\Interfaces\CategoryManagerInterface;
 use App\Context\Category\Interfaces\CategoryRelationServiceInterface;
 use App\Context\Category\Interfaces\CategoryServiceInterface;
+use App\Entity\Categories;
 use App\Entity\Category;
+use App\Repository\CategoriesRepository;
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
 use Doctrine\Common\Collections\Collection;
 
 class CategoryManager implements CategoryManagerInterface
 {
     private CategoryServiceInterface $categoryService;
-    private CategoryRepository $categoryRepository;
+    private CategoriesRepository $categoryRepository;
     
     public function __construct(
         CategoryServiceInterface $categoryService,
-        CategoryRepository $categoryRepository
+        CategoriesRepository $categoryRepository
     ) {
         $this->categoryService = $categoryService;
         $this->categoryRepository = $categoryRepository;
+    }
+    
+    public function findOneByTitle(string $title): ?Categories
+    {
+        return $this->categoryService->findByTitle($title);
+    }
+    
+    public function findById(int $id): ?Categories
+    {
+        return $this->categoryRepository->find($id);
     }
     
     public function getQueryList(SearchDto $searchDto): Query
@@ -34,12 +47,22 @@ class CategoryManager implements CategoryManagerInterface
     
     public function create(CategoryDto $categoryDto): CreateCategoryResultDto
     {
-        $entity = new Category();
-        $entity->setTitle($categoryDto->getTitle())
-            ->setChilds($categoryDto->getChilds());
+        return $this->categoryService->create($categoryDto);
+    }
+    
+    public function update(CategoryDto $categoryDto): CreateCategoryResultDto
+    {
+        return $this->categoryService->update($categoryDto);
+    }
+    
+    public function createBatch(ArrayCollection $categories): array
+    {
+        $result = [];
+        /** @var CategoryDto $category */
+        foreach ($categories as $category) {
+            $result[] = $this->create($category);
+        }
         
-        $createdEntity = $this->categoryRepository->create($entity, true);
-        
-        return new CreateCategoryResultDto($createdEntity->getId());
+        return $result;
     }
 }

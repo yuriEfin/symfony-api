@@ -15,7 +15,7 @@ class AbstractSearchDto
      */
     public function getOffset(): int
     {
-        return $this->offset;
+        return $this->offset ?? 0;
     }
     
     /**
@@ -23,9 +23,9 @@ class AbstractSearchDto
      *
      * @return AbstractSearchDto
      */
-    public function setOffset(int $offset): AbstractSearchDto
+    public function setOffset(?int $offset): AbstractSearchDto
     {
-        $this->offset = $offset;
+        $this->offset = $offset ?? 0;
         
         return $this;
     }
@@ -35,7 +35,7 @@ class AbstractSearchDto
      */
     public function getLimit(): int
     {
-        return $this->limit;
+        return $this->limit ?? PaginationConstant::DEFAULT_PAGE_ITEMS_COUNT;
     }
     
     /**
@@ -43,9 +43,9 @@ class AbstractSearchDto
      *
      * @return AbstractSearchDto
      */
-    public function setLimit(int $limit): AbstractSearchDto
+    public function setLimit(?int $limit): AbstractSearchDto
     {
-        $this->limit = $limit;
+        $this->limit = $limit ?? PaginationConstant::DEFAULT_PAGE_ITEMS_COUNT;
         
         return $this;
     }

@@ -2,7 +2,8 @@
 
 namespace App\Context\Parsing\Avito;
 
-class Constant
+class CategoryConstant
 {
-    
+    public const MENU = 'menu';
+    public const PRODUCT = 'product';
 }

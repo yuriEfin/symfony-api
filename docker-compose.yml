@@ -6,11 +6,12 @@ services:
         platform: linux/x86_64
         command: --default-authentication-plugin=mysql_native_password
         volumes:
-            - "db_app:/var/lib/mysql"
+            - type: bind
+              source: ./docker/database/data
+              target: /var/lib/mysql
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
             - 3306:3306
@@ -20,31 +21,29 @@ services:
         container_name: symfony-php
         hostname: symfony-php
         build:
-            context: ./php
+            context: docker/php
+            dockerfile: Dockerfile
             args:
                 TIMEZONE: ${TIMEZONE}
         ports:
             - 9001:9000
         volumes:
-            - ../:/var/www/symfony/
-            - ./php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-            - ./php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
+            - ./:/var/www/symfony/
+            - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
         networks:
             - symfony
     nginx:
         build:
-            context: ./nginx
+            context: docker/nginx
         volumes:
-            - ../:/var/www/symfony/
+            - ./:/var/www/symfony/
         ports:
             - 8081:80
         networks:
             - symfony
         env_file:
-            - .env.nginx.local
-
-volumes:
-    db_app:
+            - docker/.env.nginx.local
 
 networks:
     symfony:
