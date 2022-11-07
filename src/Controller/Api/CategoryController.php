@@ -43,7 +43,6 @@ class CategoryController extends AbstractApiController
             throw new UnprocessableEntityHttpException($errors);
         }
         $items = new Paginator($this->categoryManager->getQueryList($searchDto), false);
-        $this->setCollectionEnvelop('categories');
         
         return $this->json($items);
     }

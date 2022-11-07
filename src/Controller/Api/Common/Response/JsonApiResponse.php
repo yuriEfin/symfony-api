@@ -58,7 +58,7 @@ class JsonApiResponse implements ResponseModelInterface
     public function setData(mixed $data): JsonApiResponse
     {
         $this->data = array_merge(
-            ['limit' => $this->limit, 'offset' => $this->offset],
+            ['limit' => $this->limit, 'offset' => $this->offset, 'totalCount' => count($data)],
             [$this->getCollectionEnvelop() => $data]
         );
         

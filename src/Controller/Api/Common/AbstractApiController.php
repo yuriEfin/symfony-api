@@ -35,13 +35,13 @@ abstract class AbstractApiController extends AbstractController
         $responseModel->setLimit($limit);
         $responseModel->setOffset($offset);
         $responseModel->setCollectionEnvelop($this->getCollectionEnvelop());
-        $responseModel->setData($data);
         $responseModel->setMeta(
             array_merge(['query' => $request->query->all()], [
                 'defaultPageSize' => PaginationConstant::DEFAULT_PAGE_ITEMS_COUNT,
             ])
         );
-        
+        $responseModel->setData($data);
+    
         $json = $serializer->serialize(
             $responseModel,
             'json',
@@ -68,7 +68,7 @@ abstract class AbstractApiController extends AbstractController
     
     public function getCollectionEnvelop(): string
     {
-        return $this->collectionEnvelop ?? basename(str_replace('\\', '/', $this::class));
+        return $this->collectionEnvelop ?? strtolower(basename(str_replace('Controller', '', str_replace('\\', '/', $this::class))));
     }
     
     public function setCollectionEnvelop(string $collectionEnvelop)

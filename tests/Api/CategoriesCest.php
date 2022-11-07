@@ -15,6 +15,6 @@ class CategoriesCest
         $I->sendGet(self::BASE_ROUTE);
         $I->seeResponseCodeIsSuccessful();
         $I->seeResponseIsJson();
-        $I->seeResponseContains('{"limit":20,"offset":0,"categories":');
+        $I->seeResponseContains('{"limit":20,"offset":0,"totalCount":20,"category":');
     }
 }
