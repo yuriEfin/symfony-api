@@ -4,8 +4,6 @@ namespace App\Command;
 
 use App\Context\Category\Dto\CategoryDto;
 use App\Context\Category\Interfaces\CategoryManagerInterface;
-use App\Entity\Categories;
-use App\Entity\Category;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;

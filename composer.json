@@ -40,6 +40,7 @@
     "codeception/module-phpbrowser": "^3.0",
     "codeception/module-rest": "^3.3",
     "codeception/module-symfony": "^3.1",
+    "fzaninotto/faker": "^1.5",
     "symfony/debug-bundle": "6.1.*",
     "symfony/maker-bundle": "1.43.*",
     "symfony/stopwatch": "6.1.*",

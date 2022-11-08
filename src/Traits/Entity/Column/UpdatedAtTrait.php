@@ -4,9 +4,13 @@ namespace App\Traits\Entity\Column;
 
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\ORM\Mapping as ORM;
 
 trait UpdatedAtTrait
 {
+    #[ORM\Column(type: 'datetime')]
+    private DateTimeInterface $updatedAt;
+    
     public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;

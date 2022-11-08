@@ -23,10 +23,12 @@ class AddPageSettingsSubscriber implements EventSubscriberInterface
     {
         $response = $responseEvent->getResponse();
         $content = json_decode($response->getContent(), true);
-        // example getting page setting and add to api response
-        // OR
-        // possible use pattern "Chain of responsibility" for more complex processing
-        $content['meta'] = array_merge($content['meta'], ['pageSettings' => ['key' => 'value1', 'key2' => 'value2']]);
-        $responseEvent->getResponse()->setContent(json_encode($content));
+        if ($content['meta'] ?? false) {
+            // example getting page setting and add to api response
+            // OR
+            // possible use pattern "Chain of responsibility" for more complex processing
+            $content['meta'] = array_merge($content['meta'], ['pageSettings' => ['key' => 'value1', 'key2' => 'value2']]);
+            $responseEvent->getResponse()->setContent(json_encode($content));
+        }
     }
 }

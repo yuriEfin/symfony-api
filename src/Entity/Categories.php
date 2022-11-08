@@ -39,12 +39,6 @@ class Categories
     #[ORM\ManyToOne(targetEntity: CategoriesStatus::class)]
     private ?CategoriesStatus $status = null;
     
-    #[ORM\Column(type: 'datetime_immutable')]
-    private ?DateTimeInterface $createdAt;
-    
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
-    private ?DateTimeInterface $updatedAt;
-    
     public function __construct()
     {
         $this->parent = new ArrayCollection();
