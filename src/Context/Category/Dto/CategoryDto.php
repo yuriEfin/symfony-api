@@ -21,6 +21,7 @@ class CategoryDto implements DtoInterface, CategoryInterface
     #[Assert\Type('string')]
     private ?string $statusId = null;
     private ArrayCollection $childs;
+    private ?string $parseUrl = null;
     
     public function __construct(string $title, ArrayCollection $childs)
     {
@@ -164,6 +165,26 @@ class CategoryDto implements DtoInterface, CategoryInterface
     public function setChilds(ArrayCollection $childs): CategoryDto
     {
         $this->childs = $childs;
+        
+        return $this;
+    }
+    
+    /**
+     * @return string|null
+     */
+    public function getParseUrl(): ?string
+    {
+        return $this->parseUrl;
+    }
+    
+    /**
+     * @param string|null $parseUrl
+     *
+     * @return CategoryDto
+     */
+    public function setParseUrl(?string $parseUrl): CategoryDto
+    {
+        $this->parseUrl = $parseUrl;
         
         return $this;
     }

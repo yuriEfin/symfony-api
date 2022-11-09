@@ -36,6 +36,9 @@ class Categories
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
     
+    #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+    private ?string $parseUrl = null;
+    
     #[ORM\ManyToOne(targetEntity: CategoriesStatus::class)]
     private ?CategoriesStatus $status = null;
     
@@ -122,6 +125,18 @@ class Categories
     public function setStatus(?CategoriesStatus $status): self
     {
         $this->status = $status;
+        
+        return $this;
+    }
+    
+    public function getParseUrl(): ?string
+    {
+        return $this->parseUrl;
+    }
+    
+    public function setParseUrl(?string $parseUrl): Categories
+    {
+        $this->parseUrl = $parseUrl;
         
         return $this;
     }

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller\Api\Common\Response\Event;
+namespace App\Context\Api\Common\Response\Event;
 
-use App\Controller\Api\Common\Response\Interfaces\ResponseModelInterface;
+use App\Context\Api\Common\Response\Interfaces\ResponseModelInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class BeforeSendResponseEvent extends Event

@@ -2,9 +2,10 @@
 
 namespace App\Controller\Api;
 
+
+use App\Context\Api\Common\AbstractApiController;
 use App\Context\Category\Dto\Search\SearchDto;
 use App\Context\Category\Interfaces\CategoryManagerInterface;
-use App\Controller\Api\Common\AbstractApiController;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,12 +18,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class CategoryController extends AbstractApiController
 {
     private CategoryManagerInterface $categoryManager;
-    private ValidatorInterface $validator;
+    private ValidatorInterface       $validator;
     
     public function __construct(CategoryManagerInterface $categoryManager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $this->categoryManager = $categoryManager;
-        $this->serializer = $serializer;
         $this->validator = $validator;
     }
     
@@ -42,8 +42,9 @@ class CategoryController extends AbstractApiController
         if (count($errors) > 0) {
             throw new UnprocessableEntityHttpException($errors);
         }
-        $items = new Paginator($this->categoryManager->getQueryList($searchDto), false);
         
-        return $this->json($items);
+        return $this->json(
+            new Paginator($this->categoryManager->getQueryList($searchDto), false)
+        );
     }
 }

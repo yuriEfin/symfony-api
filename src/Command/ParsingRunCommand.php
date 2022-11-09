@@ -13,10 +13,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
-    name: 'app:avito-parsing-run',
+    name: 'app:parsing-run',
     description: 'Add a short description for your command',
 )]
-class AvitoParsingRunCommand extends Command
+class ParsingRunCommand extends Command
 {
     protected function configure(): void
     {
@@ -34,8 +34,11 @@ class AvitoParsingRunCommand extends Command
         if ($arg1) {
             $io->note(sprintf('You passed an argument: %s', $arg1));
         }
-
+    
         $parser = ParserFactory::create(CategoryConstant::MENU);
+        $parser->parse();
+    
+        $parser = ParserFactory::create(CategoryConstant::PRODUCT);
         $parser->parse();
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');

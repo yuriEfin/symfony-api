@@ -43,6 +43,7 @@ class CategoryService implements CategoryServiceInterface
         $entity
             ->setTitle($dto->getTitle())
             ->setStatus($status)
+            ->setParseUrl($dto->getParseUrl())
             ->setParent(new ArrayCollection())
             ->setChilds(new ArrayCollection($this->getChild($dto, $parentCategory)))
             ->setUpdatedAt(new \DateTimeImmutable());
@@ -70,6 +71,7 @@ class CategoryService implements CategoryServiceInterface
                 $category
                     ->setId($childItem->getId())
                     ->setTitle($childItem->getTitle())
+                    ->setParseUrl($childItem->getParseUrl())
                     ->setChilds(new ArrayCollection($this->getChild($childItem, $entityChildItem)))
                     ->setStatus($status);
                 

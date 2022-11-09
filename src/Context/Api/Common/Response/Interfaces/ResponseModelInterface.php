@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Controller\Api\Common\Response\Interfaces;
-
-use App\Controller\Api\Common\Response\JsonApiResponse;
+namespace App\Context\Api\Common\Response\Interfaces;
 
 interface ResponseModelInterface
 {

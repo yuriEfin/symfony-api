@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller\Api\Common\Response;
+namespace App\Context\Api\Common\Response;
 
+use App\Context\Api\Common\Response\Interfaces\ResponseModelInterface;
 use App\Context\Search\Constant\PaginationConstant;
-use App\Controller\Api\Common\Response\Interfaces\ResponseModelInterface;
 use Symfony\Component\Serializer\Annotation\Ignore;
 
 class JsonApiResponse implements ResponseModelInterface

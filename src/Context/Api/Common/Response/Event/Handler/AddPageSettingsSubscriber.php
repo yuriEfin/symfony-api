@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Controller\Api\Common\Response\Event\Handler;
+namespace App\Context\Api\Common\Response\Event\Handler;
 
-use App\Controller\Api\Common\Response\Event\BeforeSendResponseEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;

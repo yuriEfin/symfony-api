@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Controller\Api\Common;
+namespace App\Context\Api\Common;
 
+use App\Context\Api\Common\Response\Interfaces\ResponseModelInterface;
+use App\Context\Api\Common\Response\JsonApiResponse;
 use App\Context\Search\Constant\PaginationConstant;
-use App\Controller\Api\Common\Response\Interfaces\ResponseModelInterface;
-use App\Controller\Api\Common\Response\JsonApiResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\SerializerInterface;
 
 abstract class AbstractApiController extends AbstractController
@@ -30,7 +29,7 @@ abstract class AbstractApiController extends AbstractController
         
         $limit = $request->get('limit');
         $offset = $request->get('offset');
-        /** @var ResponseModelInterface $responseModel */
+        /** @var \App\Context\Api\Common\Response\Interfaces\ResponseModelInterface $responseModel */
         $responseModel = new ($this->getResponseModel())();
         $responseModel->setLimit($limit);
         $responseModel->setOffset($offset);

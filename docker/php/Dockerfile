@@ -20,6 +20,8 @@ RUN apt-get update && apt-get install -y \
     libxslt1-dev \
     iputils-ping \
     telnet \
+    nano \
+    less \
     acl \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
@@ -39,4 +41,5 @@ RUN pecl install xdebug \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN echo 'alias codecept="/var/www/symfony/vendor/bin/codecept"' >> ~/.bashrc
+RUN echo 'alias exportDebug="export PHP_IDE_CONFIG=serverName=sf.devel"' >> ~/.bashrc
 WORKDIR /var/www/symfony

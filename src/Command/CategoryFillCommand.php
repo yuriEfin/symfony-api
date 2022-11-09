@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+
 use App\Context\Category\Dto\CategoryDto;
 use App\Context\Category\Interfaces\CategoryManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -47,7 +48,8 @@ class CategoryFillCommand extends Command
             $categoryDto = new CategoryDto($category['name'], new ArrayCollection($childCategories));
             $categoryDto
                 ->setId($category['id'])
-                ->setStatusId($category['status']);
+                ->setStatusId($category['status'])
+                ->setParseUrl($this->getUrl($category));
             
             $bufferCategories[] = $categoryDto;
         }
@@ -56,6 +58,16 @@ class CategoryFillCommand extends Command
         $io->success('Finished!');
         
         return Command::SUCCESS;
+    }
+    
+    private function getUrl(array $data): ?string
+    {
+        $parseUrl = $data['url'];
+        if (empty($parseUrl)) {
+            $parseUrl = sprintf('%s/%s/%d/%s', 'https://cdek.shopping/', 'c', $data['id'], $data['slug']);
+        }
+        
+        return $parseUrl;
     }
     
     private function getChild($category): array
@@ -67,6 +79,7 @@ class CategoryFillCommand extends Command
             $categoryDto
                 ->setParentTitle($category['name'])
                 ->setId($categoryChildItem['id'])
+                ->setParseUrl($this->getUrl($categoryChildItem))
                 ->setStatusId($categoryChildItem['status']);
             
             $children[$category['id']][] = $categoryDto;
