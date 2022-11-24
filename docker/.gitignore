@@ -1,2 +1,3 @@
 database/data
-.env.nginx.local
+postgresql/data
+nginx/.env.nginx.local

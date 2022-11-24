@@ -1,0 +1,40 @@
+version: "3"
+
+networks:
+  app-tier:
+    driver: bridge
+
+services:
+  zipkin:
+    container_name: tracer-zipkin
+    hostname: tracer-zipkin
+    image: openzipkin/zipkin-dependencies
+    networks:
+      - app-tier
+    ports:
+      - '9412:9411'
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - ES_TIMEOUT=100000
+      - ES_INDEX=zipkin
+      - ES_DATE_SEPARATOR=-
+      - ES_HOSTS=172.30.0.1:9200
+      - ES_PORT_NUMBER=9200
+      - ES_NODE_PORT_NUMBER=9300
+      - ES_NODES_WAN_ONLY=false
+
+  elasticsearch:
+    container_name: elasticsearch
+    hostname: elasticsearch
+    image: docker.io/bitnami/elasticsearch:5
+    networks:
+      - app-tier
+    ports:
+      - '172.30.0.1:9200:9200'
+      - '172.30.0.1:9300:9300'
+    volumes:
+      - 'elasticsearch_data_v6:/bitnami/elasticsearch/data'
+
+volumes:
+  elasticsearch_data_v6:
+    driver: local

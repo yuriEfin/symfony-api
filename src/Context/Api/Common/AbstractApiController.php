@@ -2,17 +2,19 @@
 
 namespace App\Context\Api\Common;
 
+
 use App\Context\Api\Common\Response\Interfaces\ResponseModelInterface;
 use App\Context\Api\Common\Response\JsonApiResponse;
 use App\Context\Search\Constant\PaginationConstant;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 abstract class AbstractApiController extends AbstractController
 {
-    protected ?string $responseModel = null;
+    protected ?string $responseModel     = null;
     protected ?string $collectionEnvelop = null;
     
     /**
@@ -25,7 +27,17 @@ abstract class AbstractApiController extends AbstractController
         /** @var Request $request */
         $request = $this->container->get('request_stack')->getCurrentRequest();
         
-        $data = $serializer->normalize($data);
+        $data = $serializer->normalize(
+            $data,
+            null,
+            [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                    '__initializer__',
+                    '__cloner__',
+                    '__isInitialized__',
+                ],
+            ]
+        );
         
         $limit = $request->get('limit');
         $offset = $request->get('offset');
@@ -35,18 +47,26 @@ abstract class AbstractApiController extends AbstractController
         $responseModel->setOffset($offset);
         $responseModel->setCollectionEnvelop($this->getCollectionEnvelop());
         $responseModel->setMeta(
-            array_merge(['query' => $request->query->all()], [
-                'defaultPageSize' => PaginationConstant::DEFAULT_PAGE_ITEMS_COUNT,
-            ])
+            array_merge(
+                ['query' => $request->query->all()],
+                [
+                    'defaultPageSize' => PaginationConstant::DEFAULT_PAGE_ITEMS_COUNT,
+                ]
+            )
         );
         $responseModel->setData($data);
-    
+        
         $json = $serializer->serialize(
             $responseModel,
             'json',
             array_merge(
                 [
-                    'json_encode_options' => JsonResponse::DEFAULT_ENCODING_OPTIONS,
+                    AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                        '__initializer__',
+                        '__cloner__',
+                        '__isInitialized__',
+                    ],
+                    'json_encode_options'                  => JsonResponse::DEFAULT_ENCODING_OPTIONS,
                 ],
                 $context
             )

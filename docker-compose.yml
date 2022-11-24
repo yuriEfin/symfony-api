@@ -1,25 +1,32 @@
 version: "3"
 
+networks:
+    symfony:
+        external: true
+
 services:
-    db:
-        image: mysql:8.0.23
-        platform: linux/x86_64
-        command: --default-authentication-plugin=mysql_native_password
-        volumes:
-            - type: bind
-              source: ./docker/database/data
-              target: /var/lib/mysql
-        environment:
-            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-            MYSQL_DATABASE: ${MYSQL_DATABASE}
-            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    catalog-db-postgres:
+        container_name: catalog-db-postgres
+        hostname: catalog-db-postgres
+        image: postgres
+        restart: always
+        env_file:
+            - ./.env
         ports:
-            - 3306:3306
-        networks:
-            - symfony
-    php:
-        container_name: symfony-php
-        hostname: symfony-php
+            - 5433:5432
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+            POSTGRES_DB: ${POSTGRES_DB}
+        volumes:
+            - ./docker/postgresql/data:/var/lib/postgresql/data
+            - ./docker/postgresql/init:/docker-entrypoint-initdb.d
+
+    catalog-php:
+        container_name: catalog-php
+        hostname: catalog-php
+        env_file:
+            - ./.env
         build:
             context: docker/php
             dockerfile: Dockerfile
@@ -31,20 +38,17 @@ services:
             - ./:/var/www/symfony/
             - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
             - ./docker/php/conf.d/error_reporting.ini:/usr/local/etc/php/conf.d/error_reporting.ini
-        networks:
-            - symfony
-    nginx:
+            - ./docker/php/conf.d/php.ini-production:/usr/local/etc/php/php.ini-production
+            - ./docker/php/conf.d/php.ini-development:/usr/local/etc/php/php.ini-development
+
+    catalog-nginx:
+        container_name: catalog-nginx
+        hostname: catalog-nginx
         build:
             context: docker/nginx
         volumes:
             - ./:/var/www/symfony/
         ports:
             - 8081:80
-        networks:
-            - symfony
         env_file:
-            - docker/.env.nginx.local
-
-networks:
-    symfony:
-
+            - docker/nginx/.env.nginx.local

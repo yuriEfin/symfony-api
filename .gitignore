@@ -17,3 +17,4 @@
 ###< phpunit/phpunit ###
 /tests/_data
 /tests/_output
+.env.local

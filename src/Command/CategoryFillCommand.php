@@ -47,7 +47,6 @@ class CategoryFillCommand extends Command
             
             $categoryDto = new CategoryDto($category['name'], new ArrayCollection($childCategories));
             $categoryDto
-                ->setId($category['id'])
                 ->setStatusId($category['status'])
                 ->setParseUrl($this->getUrl($category));
             

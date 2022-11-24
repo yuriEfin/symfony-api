@@ -45,8 +45,9 @@ class CategoriesRepository extends ServiceEntityRepository
         return $query->getQuery();
     }
     
-    public function create(Categories $entity, bool $flush = false): Categories
+    public function create(Categories $entity, bool|null $flush = null): Categories
     {
+        $flush ??= false;
         $this->getEntityManager()->persist($entity);
         
         if ($flush) {
@@ -56,8 +57,9 @@ class CategoriesRepository extends ServiceEntityRepository
         return $entity;
     }
     
-    public function remove(Categories $entity, bool $flush = false): void
+    public function remove(Categories $entity, bool|null $flush = null): void
     {
+        $flush ??= false;
         $this->getEntityManager()->remove($entity);
         
         if ($flush) {

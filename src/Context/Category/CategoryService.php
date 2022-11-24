@@ -2,6 +2,7 @@
 
 namespace App\Context\Category;
 
+
 use App\Context\Category\Dto\CategoryDto;
 use App\Context\Category\Dto\CreateCategoryResultDto;
 use App\Context\Category\Dto\Interfaces\CategoryInterface;
@@ -17,7 +18,7 @@ use DateTime;
 
 class CategoryService implements CategoryServiceInterface
 {
-    private CategoriesRepository $categoriesRepository;
+    private CategoriesRepository       $categoriesRepository;
     private CategoriesStatusRepository $categoriesStatusRepository;
     
     public function __construct(CategoriesRepository $categoriesRepository, CategoriesStatusRepository $categoriesStatusRepository)
@@ -33,8 +34,8 @@ class CategoryService implements CategoryServiceInterface
      */
     public function create(CategoryInterface|DtoInterface $dto): CreateCategoryResultDto
     {
-        $status = $this->categoriesStatusRepository->find($dto->getStatusId() ?? 1);
-        if (null === $status) {
+        $status = $this->categoriesStatusRepository->findOneBy(['alias' => $dto->getStatusId()]);
+        if ($status === null) {
             $status = $this->categoriesStatusRepository->find(1);
         }
         $parentCategory = $this->findByTitle($dto->getTitle());
@@ -56,8 +57,8 @@ class CategoryService implements CategoryServiceInterface
     
     private function getChild(CategoryDto $category, ?Categories $parent): array
     {
-        $status = $this->categoriesStatusRepository->find($category->getStatusId() ?? 1);
-        if (null === $status) {
+        $status = $this->categoriesStatusRepository->findOneBy(['alias' => $category->getStatusId()]);
+        if ($status === null) {
             $status = $this->categoriesStatusRepository->find(1);
         }
         
@@ -69,7 +70,6 @@ class CategoryService implements CategoryServiceInterface
                 
                 $category = $entityChildItem ?? new Categories();
                 $category
-                    ->setId($childItem->getId())
                     ->setTitle($childItem->getTitle())
                     ->setParseUrl($childItem->getParseUrl())
                     ->setChilds(new ArrayCollection($this->getChild($childItem, $entityChildItem)))

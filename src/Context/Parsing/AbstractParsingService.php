@@ -2,10 +2,12 @@
 
 namespace App\Context\Parsing;
 
+
+use App\Context\Parsing\Interfaces\ParserInterface;
 use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\HttpClient\HttpClient;
 
-abstract class AbstractParsingService
+abstract class AbstractParsingService implements ParserInterface
 {
     protected string $baseUrl;
     

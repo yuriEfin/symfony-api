@@ -4,6 +4,7 @@ ARG TIMEZONE
 COPY php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
 RUN apt-get update && apt-get install -y \
+    libpq-dev \
     gnupg \
     g++ \
     procps \
@@ -25,11 +26,20 @@ RUN apt-get update && apt-get install -y \
     acl \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends gcc git libssl-dev g++ make && \
+  cd /tmp && git clone https://github.com/edenhill/librdkafka.git && \
+  cd librdkafka && git checkout tags/v1.9.2 && \
+  ./configure && make && make install && \
+  pecl channel-update pecl.php.net && \
+  pecl install rdkafka && \
+  docker-php-ext-enable rdkafka && \
+  cd ../ && rm -rf librdkafka
+
 RUN docker-php-ext-configure gd --with-jpeg --with-freetype 
 
 RUN docker-php-ext-install \
-    pdo pdo_mysql zip xsl gd intl opcache exif mbstring
-
+    pgsql pdo pdo_pgsql pdo_mysql zip xsl gd intl opcache exif mbstring
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime && echo ${TIMEZONE} > /etc/timezone \
     && printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/conf.d/tzone.ini \

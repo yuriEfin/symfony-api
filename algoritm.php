@@ -117,3 +117,42 @@ class MyArray
         return false;
     }
 }
+
+//$j=0;
+//$buff = [];
+//$buff[$j][]=1;
+//$buff[$j][]=1;
+//var_dump(array_search(1, $buff[$j])); die;
+
+function getStrWithKLen(string $str, int $k)
+{
+    $buffer = [];
+  
+    $strToArr = str_split($str);
+    if (strlen($str) === $k && count(array_unique($strToArr)) === $k) {
+        return strlen($str);
+    }
+    $j = 1;
+    $countChar = count($strToArr);
+    for ($i = 0; $i <= $countChar - 1; $i++) {
+        $currLeftSym = $strToArr[$i];
+        if (!isset($buffer[$j])) {
+            $buffer[$j] = [];
+        }
+        $buffer[$j][] = $currLeftSym;
+        
+        if (isset($strToArr[$i+1]) && $currLeftSym == $strToArr[$i+1]) {
+            continue;
+        }
+        
+        if (count(array_unique($buffer[$j])) >= $k) {
+            $j++;
+        }
+    }
+    
+    sort($buffer);
+    return count(array_pop($buffer));
+}
+
+$s = "abcabcbb";
+var_export(getStrWithKLen($s, 2));

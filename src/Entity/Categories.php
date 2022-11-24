@@ -26,10 +26,10 @@ class Categories
     #[ORM\Column(type: 'string', length: 155, unique: false)]
     private ?string $title = null;
     
-    #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'childs')]
+    #[ORM\ManyToMany(targetEntity: Categories::class, mappedBy: 'childs', fetch: 'LAZY')]
     private ?Collection $parent = null;
     
-    #[ORM\ManyToMany(targetEntity: Categories::class, inversedBy: 'parent', cascade: ['persist'])]
+    #[ORM\ManyToMany(targetEntity: Categories::class, inversedBy: 'parent', cascade: ['persist'], fetch: 'LAZY')]
     private Collection $childs;
     
     #[ORM\Column(type: 'string', length: 200, unique: true)]
