@@ -3,36 +3,9 @@ enqueue:
     transport:
       dsn: '%env(KAFKA_URL)%'
       global:
-        ### Make sure this is unique for each application / consumer group and does not change
-        ### Otherwise, Kafka won't be able to track your last offset and will always start according to
-        ### `auto.offset.reset` setting.
-        ### See Kafka documentation regarding `group.id` property if you want to know more
-        group.id: '%env(KAFKA_GROUP_ID)%'
-        metadata.broker.list: 'kafka:9092'
-        auto.offset.reset: 'earliest'
-
-      producer:
-        dsn: '%env(KAFKA_URL)%'
-        # serializer: App\Infrastructure\Messenger\MySerializer
-        options:
-          flushTimeout: 10000
-          flushRetries: 5
-          enable.auto.offset.store: 'true'
-          group.id: 'foo' # should be unique per consumer
-          min.insync.replicas: '3'
-
-      consumer:
-        dsn: '%env(KAFKA_URL)%'
-        # serializer: App\Infrastructure\Messenger\MySerializer
-        options:
-          commitAsync: true
-          receiveTimeout: 10000
-          kafka_conf:
-            enable.auto.offset.store: 'true'
-            group.id: 'foo' # should be unique per consumer
-            max.poll.interval.ms: '45000'
-            allow.auto.create.topics: 'true'
-          topic_conf:
-            name: 'failed'
-
+        group.id: 'catalog-php'
+        metadata.broker.list: "%env(KAFKA_BROKER_LIST)%"
+      topic:
+        auto.offset.reset: beginning
+      commit_async: true
     client: ~

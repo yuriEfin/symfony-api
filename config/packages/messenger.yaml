@@ -1,0 +1,46 @@
+framework:
+  messenger:
+    transports:
+      producer:
+        dsn: '%env(KAFKA_URL)%'
+        serializer: App\Infrastructure\Messenger\KafkaSymfonyEventsSerializer
+        options:
+          flushTimeout: 10000
+          flushRetries: 5
+          topic:
+            name: 'symfony_events'
+      async_symfony_events:
+        dsn: '%env(KAFKA_URL)%'
+        serializer: App\Infrastructure\Messenger\KafkaSymfonyEventsSerializer
+        options:
+          commitAsync: true
+          receiveTimeout: 10000
+          topic:
+            name: "symfony_events"
+            group.id: 'my-group-id' # should be unique per consumer
+          kafka_conf:
+            enable.auto.offset.store: 'false'
+            group.id: 'my-group-id' # should be unique per consumer
+            max.poll.interval.ms: '45000'
+            min.insync.replicas: '3'
+          topic_conf:
+            auto.offset.reset: 'earliest'
+
+      async:
+        dsn: '%env(KAFKA_URL)%'
+        serializer: App\Infrastructure\Messenger\KafkaSymfonyEventsSerializer
+        options:
+          auto_setup: true
+          debug: true
+          commitAsync: true
+          receiveTimeout: 10000
+          topic:
+            name: "sf_crud_events"
+            group.id: 'my-group-id' # should be unique per consumer
+          kafka_conf:
+            enable.auto.offset.store: 'false'
+            group.id: 'sf_crud_events' # should be unique per consumer
+            max.poll.interval.ms: '45000'
+          topic_conf:
+            auto.offset.reset: 'earliest'
+

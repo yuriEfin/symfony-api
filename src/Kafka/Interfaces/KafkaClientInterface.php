@@ -7,7 +7,7 @@ interface KafkaClientInterface
 {
     public function createTopic(string $topicName, string $key = null): self;
     
-    public function createPacket(string $message, array $options = []): self;
+    public function createPacket(array $message, array $options = []): self;
     
     public function push(): void;
     

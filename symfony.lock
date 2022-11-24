@@ -141,6 +141,9 @@
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
+    "koco/messenger-kafka": {
+        "version": "v0.17"
+    },
     "laminas/laminas-code": {
         "version": "4.4.3"
     },
@@ -208,6 +211,15 @@
         "files": [
             "config/packages/sentry.yaml"
         ]
+    },
+    "sroze/messenger-enqueue-transport": {
+        "version": "0.6",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.1",
+            "ref": "9a7119f609b576a30dbf03e4fe44212388e96ea1"
+        }
     },
     "stof/doctrine-extensions-bundle": {
         "version": "1.7",
@@ -329,6 +341,18 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
+    },
+    "symfony/messenger": {
+        "version": "6.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.0",
+            "ref": "2523f7d31488903e247a522e760dc279be7f7aaf"
+        },
+        "files": [
+            "config/packages/messenger.yaml"
+        ]
     },
     "symfony/mime": {
         "version": "v5.0.1"

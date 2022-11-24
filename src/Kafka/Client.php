@@ -35,9 +35,9 @@ class Client implements KafkaClientInterface
         return $this;
     }
     
-    public function createPacket(string $message, array $options = []): self
+    public function createPacket(array $message, array $options = []): self
     {
-        $this->packet = new RdKafkaMessage($message, $options);
+        $this->packet = new RdKafkaMessage(json_encode($message), $options);
         $this->packet->setKey($this->topic->getKey());
         
         return $this;

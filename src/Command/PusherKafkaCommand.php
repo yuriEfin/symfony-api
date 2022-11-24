@@ -33,24 +33,37 @@ class PusherKafkaCommand extends Command
     
     protected function configure(): void
     {
-        $this->addArgument('message', InputArgument::REQUIRED, 'Message to topic')
+        $this
+            ->addArgument('topic', InputArgument::REQUIRED, 'Topic name')
+            ->addArgument('message', InputArgument::REQUIRED, 'Message to topic')
             ->addArgument('key', InputArgument::REQUIRED, 'Key for message and topic')
-            ->addArgument('id', InputArgument::REQUIRED, 'Key for message and topic')
-        ;
+            ->addArgument('id', InputArgument::REQUIRED, 'Key for message and topic');
     }
     
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        $topic = $input->getArgument('topic');
         $mess = $input->getArgument('message');
         $key = $input->getArgument('key');
         $id = $input->getArgument('id');
         $io->success(sprintf('Process message "%s" send to topic "%s" with key %s ...', $mess, 'sf_crud_events', 'crud'));
         
-        $this->kafkaClient
-            ->createTopic('sf_crud_events', $key)
-            ->createPacket(json_encode(['type' => 'create', 'body' => ['entity' => Categories::class, 'message' => $mess]]))
-            ->push();
+        for ($i = 0; $i <= 1000; $i++) {
+            $this->kafkaClient
+                ->createTopic($topic, $key)
+                ->createPacket(
+                    [
+                        'type' => 'create',
+                        'body' => [
+                            'entity'  => Categories::class,
+                            'message' => $mess,
+                            'id'      => $id ,
+                        ],
+                    ]
+                )
+                ->push();
+        }
         
         $io->success(sprintf('Message "%s" sended to topic "%s" with key %s', $mess, 'sf_crud_events', 'crud'));
         

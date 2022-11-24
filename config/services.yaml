@@ -24,3 +24,11 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Kafka\Interfaces\KafkaClientInterface:
         class: App\Kafka\Client
+
+    App\Kafka\Processing\CrudEvents\CrudOperationProcessor:
+        tags:
+            - { name: 'enqueue.topic_subscriber' }
+
+    App\Kafka\Processing\Events\EventProcessor:
+        tags:
+            - { name: 'enqueue.topic_subscriber' }
